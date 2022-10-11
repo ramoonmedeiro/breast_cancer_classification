@@ -70,7 +70,9 @@ X_treino, X_teste, y_treino, y_teste = train_test_split(X, y, test_size=0.3, ran
 
 Irei utilizar a biblioteca scikeras, que é uma lib que faz a integração do keras e a scikit-learn. Para utilizar a mesma, é necessário criar uma função 
 onde é montada a arquitetura da rede neural, para este caso, testei combinações do número de camadas ocultas e número de neurônios matemáticos por camada
-para achar a melhor combinação dentre as duas e a melhor arquitetura foi uma rede neural densa com duas camadas ocultas, cada uma delas com 8 neurònios matemáticos. A camada de entrada possui 30 neurônios, já que há 30 atributos de entradas. A camada de saída possuí apenas um neurônio de saída, já que o problema em questão trata-se de uma classificação binária. Foi utilizada duas camadas de dropout, onde tal camada realiza uma regularização, onde alguns neurônios são desligados aleatoriamente, juntamente com suas conexões, durante o treinamento ape, foi escolhido o valor de 20 %, ou seja, 20 % dos neurônios de cada camada oculta serão resetados como zero. O motivo de utilizar a camada de droput
+para achar a melhor combinação dentre as duas e a melhor arquitetura foi uma rede neural densa com duas camadas ocultas, cada uma delas com 8 neurònios matemáticos. A camada de entrada possui 30 neurônios, já que há 30 atributos de entradas. A camada de saída possuí apenas um neurônio de saída, já que o problema em questão trata-se de uma classificação binária. Foi utilizada duas camadas de dropout, onde tal camada realiza uma regularização, onde alguns neurônios são desligados aleatoriamente, juntamente com suas conexões, durante o treinamento ape, foi escolhido o valor de 20 %, ou seja, 20 % dos neurônios de cada camada oculta serão resetados como zero. O motivo de utilizar a camada de dropout é justamente para evitar o overfitting. 
+Com relação às funções de ativação, para as camadas ocultas foi utilizada a função reLU, recomendada da literatura para esses casos e para a camada de saída, foi utilizada a função sigmóide, já que o problema trata-se de um problema binário e a função sigmóide varia de 0 a 1, que é justamente o intervalo que eu preciso que os resultados da rede neural estejam.
+
 ```
 def nn_create():
   model = Sequential()
@@ -81,7 +83,38 @@ def nn_create():
   model.add(Dense(units = 1, activation = 'sigmoid'))
   model.compile(optimizer='adam', loss = 'binary_crossentropy', metrics = ['binary_accuracy'])
   return model
-  
-  
+```
+
+Após a construção da rede neural, utiliza-se a função KerasClassifier passando a função com argumento, além disso, o número de épocas foi escolhido como 30 e os pesos serão atualizados a cada 10 instâncias (batch_size = 10).
+
+```
 clf = KerasClassifier(build_fn = nn_create, epochs = 30, batch_size = 10)
+```
+
+Abaixo foi realizada a validação cruzada e já apresentado valor final da acurácia para o conjunto de treino:
+
+```
+# Validação Cruzada
+results = cross_val_score(clf, X_treino, y_treino, cv = 10)
+
+# média
+acc = results.mean()
+# desvio padrão
+std = results.std()
+
+print(f'Acurácia de {acc:.2f} +- {std:.2f}')
+
+0.92 +- 0.04
+```
+
+# Conjunto de Testes
+
+```
+# Treinando rede neural
+clf.fit(X_treino, y_treino)
+# Prevendo valores
+res = clf.predict(X_teste)
+print(f'{accuracy_score(y_teste, resultados):.2f}')
+
+0.91
 ```
