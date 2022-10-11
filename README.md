@@ -17,6 +17,8 @@ import pandas as pd
 # Libs da Scikit-Learn
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import accuracy_score
+
 
 # Integrando Keras e Scikit-Learn 
 from scikeras.wrappers import KerasClassifier
