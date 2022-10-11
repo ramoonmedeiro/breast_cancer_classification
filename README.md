@@ -118,3 +118,5 @@ print(f'{accuracy_score(y_teste, resultados):.2f}')
 
 0.91
 ```
+
+O resultado da acurácia foi parecido tanto com relação ao conjunto de treino quanto no conjunto de teste. Além disso, superou e muito o valor do modelo baseline (91.00 % em relação à 62.74%). Poderia-se fazer a tunagem de hiperparâmetros da rede neural, realizar a normalização dos dados, escolher outras funções de ativação, quantidade de camadas ocultas e etc. Para este projeto, o valor obtido de acurácia foi suficiente.
